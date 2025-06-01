@@ -1,0 +1,21 @@
+<div class="container mt-4">
+
+  <div *ngIf="message" class="fixed-bottom alert mb-3"
+  [ngClass]="{'alert-success': !isError, 'alert-danger': isError}"
+  role="alert">
+    {{ message }}
+  </div>
+
+  <h2 class="mb-4">Create Student</h2>
+
+   <form [formGroup]="apartementForm" (ngSubmit)="createApartment()">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name:</label>
+      <input type="text" id="name" formControlName="name" class="form-control" />
+       <div *ngIf="apartmentForm.get('name')?.invalid && apartmentForm.get('name')?.touched" class="text-danger">
+            Name is required.
+       </div>
+    </div>
+
+  </form>
+</div>
