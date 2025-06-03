@@ -5,6 +5,8 @@
     moveInDate: Date;
     moveOutDate?: Date;
     isActive: boolean;
+    apartment?: ApartmentDto;
+    transactions?: TransactionDto[];
   }
 
   export interface ApartmentDto {
@@ -13,6 +15,7 @@
     area: number;
     airVolume: number;
     resident: ResidentDto;
+    transactions?: TransactionDto[];
   }
 
   export interface TransactionDto {
@@ -41,6 +44,20 @@
 
   export class globalConstants {
     public static readonly apartmentNumbers: string[] = [
-      '1/1', '102', '103', '104', '105'
+      'földszint 1. ajtó',
+      'földszint 2. ajtó',
+      'földszint 3. ajtó',
+      '1. emelet 1. ajtó',
+      '1. emelet 2. ajtó',
+      '1. emelet 3. ajtó',
+      '2. emelet 1. ajtó',
+      '2. emelet 2. ajtó',
+      '2. emelet 3. ajtó',
+      '3. emelet 1. ajtó',
+      '3. emelet 2. ajtó',
+      '3. emelet 3. ajtó',
+      '4. emelet 1. ajtó',
+      '4. emelet 2. ajtó',
+      '4. emelet 3. ajtó',
     ]
   }

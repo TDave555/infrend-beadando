@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment.development';
 @Injectable({
   providedIn: 'root'
 })
-export class ResidentServiceService {
+export class ResidentService {
 
   private apiUrl = `${environment.apiUrl}/residents`;
 
@@ -22,5 +22,9 @@ export class ResidentServiceService {
 
   getOne(id: number) {
     return this.http.get<ResidentDto>(`${this.apiUrl}/${id}`);
+  }
+
+  update(residentDto: ResidentDto) {
+    return this.http.put<ResidentDto>(`${this.apiUrl}`, residentDto);
   }
 }

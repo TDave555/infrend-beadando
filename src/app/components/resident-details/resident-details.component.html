@@ -1,0 +1,89 @@
+<div class="container mt-4">
+
+  <div *ngIf="message" class="fixed-bottom alert mb-3"
+  [ngClass]="{'alert-success': !isError, 'alert-danger': isError}"
+  role="alert">
+    {{ message }}
+  </div>
+
+  <h2 class="mb-4">Lakó adatai</h2>
+  <h4 class="mb-4 text-muted">(A *-gal jelölt adatok módosíthatók)</h4>
+
+  <div *ngIf="loading">
+    <p class="text-muted">Adatok betöltése...</p>
+  </div>
+
+  <div *ngIf="resident && !loading">
+    <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <label for="id" class="form-label">Azonosító:</label>
+        <input type="number" id="id" formControlName="id"
+        class="form-control" [readonly]="true">
+      </div>
+      <div class="mb-3">
+        <label for="name" class="form-label">* Név:</label>
+        <input type="text" id="name" formControlName="name" class="form-control">
+        <div *ngIf="detailsForm.get('name')?.invalid &&
+        detailsForm.get('name')?.touched" class="text-danger">
+          A mező nincs megfelelően kitöltve!
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="balance" class="form-label">Egyenleg:</label>
+        <input type="number" id="balance" formControlName="balance"
+        class="form-control" [readonly]="true">
+      </div>
+      <div class="mb-3">
+        <label for="moveInDate" class="form-label">Beköltözés dátuma:</label>
+        <input type="date" id="moveInDate" formControlName="moveInDate"
+        class="form-control" [readonly]="true">
+      </div>
+      <div class="mb-3">
+        <label for="moveOutDate" class="form-label">Kiköltözés dátuma:</label>
+        <input type="date" id="moveOutDate" formControlName="moveOutDate"
+        class="form-control" [readonly]="true">
+      </div>
+
+      <div class="mb-3" *ngIf="resident?.isActive">
+        <label for="apartment" class="form-label">Lakás:</label>
+        <input type="text" id="apartment" formControlName="apartment"
+        class="form-control" [readonly]="true">
+      </div>
+
+      <button type="submit" class="btn btn-warning" [disabled]="detailsForm.invalid">Lakás módosítása</button>
+      <button type="button" class="btn btn-secondary ms-2" (click)="goBackToList()">Listához</button>
+    </form>
+
+    <br>
+    <h2 class="mb-4">Tranzakciók</h2>
+
+    <div *ngIf="resident && resident.transactions && resident.transactions.length === 0">
+      <p class="text-muted">Nincs tranzakció.</p>
+    </div>
+
+    <div *ngIf="resident && resident.transactions && resident.transactions.length > 0">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Leírás</th>
+            <th>Összeg (HUF)</th>
+            <th>Dátum</th>
+            <th> </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let transaction of resident.transactions">
+            <td>{{ transaction.id }}</td>
+            <td>{{ transaction.description }}</td>
+            <td>{{ transaction.amount }}</td>
+            <td>{{ formatDate(transaction.date) }}</td>
+            <td>
+              <button (click)="deleteTransaction(transaction.id)" class="btn btn-danger">Törlés</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

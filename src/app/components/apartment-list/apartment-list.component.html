@@ -1,1 +1,46 @@
-<p>apartment-list works!</p>
+<div class="container mt-4">
+
+  <div *ngIf="message" class="fixed-bottom alert mb-3"
+  [ngClass]="{'alert-success': !isError, 'alert-danger': isError}"
+  role="alert">
+    {{ message }}
+  </div>
+
+  <h2 class="mb-4">Lakások</h2>
+
+  <button (click)="goToCreate()" class="btn btn-success mb-3">Új lakás</button>
+  <button (click)="goToMove()" class="btn btn-warning mb-3 ms-2">Költözés</button>
+
+  <div *ngIf="apartments.length === 0">
+    <p class="text-muted">Nem található egy lakás sem.</p>
+  </div>
+
+  <div *ngIf=" apartments.length > 0">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Lakás emlet, ajtó</th>
+          <th>Alapterület (m²)</th>
+          <th>Légtér (m³)</th>
+          <th>Lakó</th>
+          <th> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let apartment of apartments">
+          <td>{{ apartment.id }}</td>
+          <td>{{ apartment.apartmentNumber }}</td>
+          <td>{{ apartment.area }}</td>
+          <td>{{ apartment.airVolume }}</td>
+          <td>{{ apartment.resident.name }} (id: {{ apartment.resident.id }})</td>
+          <td>
+            <button (click)="goToDetails(apartment.id)" class="btn btn-primary">Megtekintés</button>
+            <button (click)="goToResident(apartment.resident.id)" class="btn btn-secondary ms-2">Lakó megtekintése</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

@@ -9,18 +9,20 @@ const residentController = new ResidentController();
 router.get('/residents', residentController.getAll);
 router.get('/residents/active', residentController.getAllActive);
 router.get('/residents/:id', residentController.getOne);
+router.put('/residents', residentController.update);
 
 const apartmentController = new ApartmentController();
 router.get('/apartments', apartmentController.getAll);
 router.get('/apartments/:id', apartmentController.getOne);
 router.post('/apartments', apartmentController.createWithResident);
 router.put('/apartments/move', apartmentController.move);
+router.put('/apartments', apartmentController.update);
 router.delete('/apartments/:id', apartmentController.delete);
 
 const transactionController = new TransactionController();
 router.get('/transactions/resident/:residentId', transactionController.getTransactionsOfResident);
 router.get('/transactions/:id', transactionController.getOne);
-router.post('/transactions/payment', transactionController.payCost);
+router.post('/transactions/payment', transactionController.pay);
 router.post('/transactions/multiplied-cost', transactionController.multiplyCostByArea);
 router.post('/transactions/divided-cost', transactionController.divideCostByArea);
 router.delete('/transactions/:id', transactionController.delete);

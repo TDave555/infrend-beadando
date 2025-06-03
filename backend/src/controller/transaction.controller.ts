@@ -7,14 +7,14 @@ import { Transaction } from "../entity/Transaction";
 import { Controller } from "./base.controller";
 
 export class TransactionController extends Controller {
-  transactionRepository = AppDataSource.getRepository(Transaction);
+  repository = AppDataSource.getRepository(Transaction);
   residentRepository = AppDataSource.getRepository(Resident);
   apartmentRepository = AppDataSource.getRepository(Apartment);
 
   getTransactionsOfResident = async (req, res) => {
     try {
       const residentId = req.params.residentId;
-      const transactions: Transaction[] = await this.transactionRepository.find({
+      const transactions: Transaction[] = await this.repository.find({
         where: {
            resident: {
             id: residentId,
@@ -29,23 +29,24 @@ export class TransactionController extends Controller {
     }
   }
 
-  payCost = async (req, res) => {
+  pay = async (req, res) => {
     try {
       const transactionDto = req.body as TransactionDto;
 
       const residentDto = transactionDto.resident
       const resident = await this.residentRepository.findOneBy({id: residentDto.id})
-      resident.balance = resident.balance - transactionDto.amount
+      resident.balance = Number(resident.balance) - Number(transactionDto.amount)
       const updatedResident = await this.residentRepository.save(resident);
 
-      const transactionWoId: Omit<TransactionDto, "id"> = transactionDto;
-      const transaction = this.transactionRepository.create(transactionWoId);
+      //const transactionWoId: Omit<TransactionDto, "id"> = transactionDto;
+      const transaction = this.repository.create(transactionDto);
+      delete transaction.id;
       transaction.type = TransactionType.PAYMENT;
       transaction.date = new Date();
       transaction.resident = updatedResident;
-      const savedTransaction = await this.transactionRepository.save(transaction);
+      const savedTransaction = await this.repository.save(transaction);
 
-      res.json(updatedResident)
+      res.json(savedTransaction)
     } catch (err) {
       this.handleError(res, err);
     }
@@ -57,26 +58,31 @@ export class TransactionController extends Controller {
 
       const apartments = await this.apartmentRepository.find();
 
-      const transactionWoId: Omit<TransactionDto, "id"> = transactionDto;
+      //const transactionWoId: Omit<TransactionDto, "id"> = transactionDto;
       const transactions: Transaction[] = [];
       const residents: Resident[] = [];
 
+      const amount: number = transactionDto.amount;
+
       apartments.forEach(apartment => {
 
-        transactionWoId.amount = apartment.area * transactionWoId.amount;
-        transactionWoId.apartment = apartment;
-        transactionWoId.resident = apartment.resident;
+        transactionDto.amount = Number(apartment.area) * amount;
+        transactionDto.apartment = apartment;
+        transactionDto.resident = apartment.resident;
 
         let resident = apartment.resident;
-        resident.balance = resident.balance + transactionWoId.amount;
+        resident.balance = Number(resident.balance) + Number(transactionDto.amount);
         residents.push(resident);
 
-        transactions.push(this.transactionRepository.create(transactionWoId));
+        let transaction = this.repository.create(transactionDto);
+        delete transaction.id;
+        transactions.push(transaction);
+
       });
 
       await this.residentRepository.save(residents);
-      const createdTransactions = await this.transactionRepository.save(transactions);
-      req.json(createdTransactions);
+      const createdTransactions = await this.repository.save(transactions);
+      res.json(createdTransactions);
     } catch (err) {
       this.handleError(res, err);
     }
@@ -88,34 +94,37 @@ export class TransactionController extends Controller {
 
       const apartments = await this.apartmentRepository.find();
 
-      const transactionWoId: Omit<TransactionDto, "id"> = transactionDto;
+      //const transactionWoId: Omit<TransactionDto, "id"> = transactionDto;
       const transactions: Transaction[] = [];
       const residents: Resident[] = []
 
       let areaSum: number = 0;
 
       apartments.forEach(apartment => {
-        areaSum = areaSum + apartment.area
+        areaSum = areaSum + Number(apartment.area)
       });
 
-      const amountForSqrm = transactionWoId.amount/areaSum;
+      const amountForSqrm: number = transactionDto.amount/areaSum;
 
       apartments.forEach(apartment => {
 
-        transactionWoId.amount = amountForSqrm * apartment.area;
-        transactionWoId.apartment = apartment;
-        transactionWoId.resident = apartment.resident;
+        transactionDto.amount = Number(apartment.area) * amountForSqrm;
+        transactionDto.apartment = apartment;
+        transactionDto.resident = apartment.resident;
 
         let resident = apartment.resident;
-        resident.balance = resident.balance + transactionWoId.amount;
+        resident.balance = Number(resident.balance) + Number(transactionDto.amount);
         residents.push(resident);
 
-        transactions.push(this.transactionRepository.create(transactionWoId));
+        this.repository.create(transactionDto);
+        let transaction = this.repository.create(transactionDto);
+        delete transaction.id;
+        transactions.push(transaction);
       });
 
       await this.residentRepository.save(residents);
-      const createdTransactions = await this.transactionRepository.save(transactions);
-      req.json(createdTransactions);
+      const createdTransactions = await this.repository.save(transactions);
+      res.json(createdTransactions);
     } catch (err) {
       this.handleError(res, err);
     }
@@ -124,7 +133,7 @@ export class TransactionController extends Controller {
   delete = async (req, res) => {
     try {
       const id = req.params.id;
-      const transaction = await this.transactionRepository.findOne({
+      const transaction = await this.repository.findOne({
         where: {id: id}, relations: ["resident"]
       });
 
@@ -137,10 +146,10 @@ export class TransactionController extends Controller {
       if (transaction.type = TransactionType.COST) {
         resident.balance = resident.balance - transaction.amount;
       } else if (transaction.type = TransactionType.PAYMENT) {
-        resident.balance = resident.balance + transaction.amount;
+        resident.balance = Number(resident.balance) + Number(transaction.amount);
       }
 
-      await this.transactionRepository.remove(transaction);
+      await this.repository.remove(transaction);
       res.send();
     } catch (err) {
       this.handleError(res, err);

@@ -8,7 +8,7 @@ import { Transaction } from "./entity/Transaction"
 export const AppDataSource = new DataSource({
     type: "mysql",
     host: "localhost",
-    port: 3000,
+    port: 3306,
     username: "root",
     password: undefined,
     database: "infrend_beadando_2025",

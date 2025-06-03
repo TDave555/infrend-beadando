@@ -7,27 +7,27 @@ import { ResidentDto } from "../../../models"
 export class Resident implements ResidentDto {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column()
-    name: string;
+    name!: string;
 
-    @Column({type: "decimal", precision: 6, scale: 2})
-    balance: number;
+    @Column({type: "decimal", precision: 10, scale: 2, default: 0})
+    balance!: number;
 
     @Column()
-    moveInDate: Date;
+    moveInDate!: Date;
 
     @Column({nullable: true})
     moveOutDate?: Date;
 
-    @Column()
-    isActive: boolean;
+    @Column({default: true})
+    isActive!: boolean;
 
-    @OneToOne(() => Apartment, apartment => apartment.resident, {eager: true})
+    @OneToOne(() => Apartment, apartment => apartment.resident)
     apartment?: Apartment;
 
     @OneToMany(() => Transaction, transaction => transaction.resident)
-    transactions: Transaction[];
+    transactions?: Transaction[];
 
 }

@@ -1,15 +1,18 @@
 <nav class="navbar navbar-expand-sm navbar-light bg-light">
   <div class="container-fluid">
-      <a class="navbar-brand text-center" routerLink="">Welcome</a>
+      <p class="navbar-brand text-center" routerLink=""><strong>Lakóközösségi <br> könyvelés</strong></p>
     <div class="collapse-horizontal navbar-collapse" id="navbarNav">
-      <ul>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/apartments/list">Apartement list</a>
-          <a class="nav-link" routerLink="/apartments/create">Create apartement</a>
+          <a class="nav-link" routerLink="/apartments">Lakások</a>
+          <a class="nav-link" routerLink="/apartments/create">Új lakás</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/payment">Create payment</a>
-          <a class="nav-link" routerLink="/cost">Create cost</a>
+          <a class="nav-link" routerLink="/residents">Lakók</a>
+          <a class="nav-link" routerLink="/move">Lakó beköltöztetése</a>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/transactions/payment">Befizetés</a>
+          <a class="nav-link" routerLink="/transactions/cost">Költségkiírás</a>
         </li>
       </ul>
     </div>

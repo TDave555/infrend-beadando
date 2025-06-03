@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment.development';
 @Injectable({
   providedIn: 'root'
 })
-export class TransactionServiceService {
+export class TransactionService {
 
   private apiUrl = `${environment.apiUrl}/transactions`;
 
@@ -25,11 +25,11 @@ export class TransactionServiceService {
   }
 
   createMultipliedCost(transactionDto: TransactionDto) {
-    return this.http.post<TransactionDto>(`${this.apiUrl}/multiplied-cost`, transactionDto);
+    return this.http.post<TransactionDto[]>(`${this.apiUrl}/multiplied-cost`, transactionDto);
   }
 
   createDividedCost(transactionDto: TransactionDto) {
-    return this.http.post<TransactionDto>(`${this.apiUrl}/divided-cost`, transactionDto);
+    return this.http.post<TransactionDto[]>(`${this.apiUrl}/divided-cost`, transactionDto);
   }
 
   delete(id: number) {

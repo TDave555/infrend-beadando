@@ -7,24 +7,24 @@ import { TransactionDto, TransactionType } from "../../../models";
 export class Transaction implements TransactionDto {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column({type: "enum", enum: TransactionType})
-    type: TransactionType;
+    type!: TransactionType;
 
-    @Column({type: "decimal", precision: 6, scale: 2})
-    amount: number;
-
-    @Column()
-    date: Date;
+    @Column({type: "decimal", precision: 10, scale: 2})
+    amount!: number;
 
     @Column()
-    description: string;
+    date!: Date;
 
-    @ManyToOne(() => Resident, resident => resident.transactions)
-    resident: Resident;
+    @Column()
+    description!: string;
 
-    @ManyToOne(() => Apartment, apartment => apartment.transactions, {nullable: true})
+    @ManyToOne(() => Resident, resident => resident.transactions, {eager: true})
+    resident!: Resident;
+
+    @ManyToOne(() => Apartment, apartment => apartment.transactions, {nullable: true, eager: true})
     apartment?: Apartment;
 
   }

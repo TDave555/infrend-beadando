@@ -1,1 +1,58 @@
-<p>resident-list works!</p>
+<div class="container mt-4">
+
+  <div *ngIf="message" class="fixed-bottom alert mb-3"
+  [ngClass]="{'alert-success': !isError, 'alert-danger': isError}"
+  role="alert">
+    {{ message }}
+  </div>
+
+  <h2 class="mb-4">Lakók</h2>
+
+  <button (click)="goToMove()" class="btn btn-warning mb-3 ms-2">Költözés</button>
+
+
+  <div class="mb-3">
+    <label for="listAll" class="form-label">Lista: </label>
+    <select (onchange)="loadResidents()" id="listAll" [(ngModel)]="listAll" class="form-select">
+      <option [value]=true>Összes lakó</option>
+      <option [value]=false>Csak aktív lakók</option>
+    </select>
+  </div>
+
+  <div *ngIf="residents.length === 0">
+    <p class="text-muted">Nem található egy lakó sem.</p>
+  </div>
+
+  <div *ngIf=" residents.length > 0">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Név</th>
+          <th>Egyenleg</th>
+          <th>Beköltözés dátuma</th>
+          <th *ngIf="listAll" >Kiköltözés dátuma</th>
+          <th>Lakás</th>
+          <th> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let resident of residents">
+          <td>{{ resident.id }}</td>
+          <td>{{ resident.name }}</td>
+          <td>{{ resident.balance }}</td>
+          <td>{{ formatDate(resident.moveInDate) }}</td>
+          <td *ngIf="listAll" >{{ formatDate(resident.moveOutDate!) }}</td>
+          <td>{{ resident.apartment ? `${resident.apartment.apartmentNumber}
+          (id: ${resident.apartment.id})` : '' }}</td>
+
+          <td>
+            <button (click)="goToDetails(resident.id)" class="btn btn-primary">Megtekintés</button>
+            <button *ngIf="resident.apartment" (click)="goToApartment(resident.apartment.id)" class="btn btn-secondary ms-2">Lakás megtekintése</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+

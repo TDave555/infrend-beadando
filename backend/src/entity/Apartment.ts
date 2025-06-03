@@ -7,21 +7,22 @@ import { Transaction } from "./Transaction";
 export class Apartment implements ApartmentDto {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    id!: number;
 
     @Column({type:"varchar", length: "25", unique: true})
-    apartmentNumber: string;
+    apartmentNumber!: string;
 
-    @Column({type: "decimal", precision: 6, scale: 2})
-    area: number;
+    //@Column({type: "decimal", precision: 6, scale: 2})
+    @Column()
+    area!: number;
 
-    @Column({type: "decimal", precision: 6, scale: 2})
-    airVolume: number;
+    @Column()
+    airVolume!: number;
 
-    @OneToOne(() => Resident, resident => resident.apartment)
+    @OneToOne(() => Resident, resident => resident.apartment, {eager: true, cascade: true})
     @JoinColumn()
-    resident: Resident;
+    resident!: Resident;
 
-    @OneToMany(() => Transaction, transaction => transaction.apartment, {cascade: true})
-    transactions: Transaction[];
+    @OneToMany(() => Transaction, transaction => transaction.apartment)
+    transactions?: Transaction[];
   }

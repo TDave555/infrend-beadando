@@ -1,1 +1,61 @@
-<p>payment-create works!</p>
+<div class="container mt-4">
+
+  <div *ngIf="message" class="fixed-bottom alert mb-3"
+  [ngClass]="{'alert-success': !isError, 'alert-danger': isError}"
+  role="alert">
+    {{ message }}
+  </div>
+
+  <h2 class="mb-4">Befizetés</h2>
+
+  <form [formGroup]="creationForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="resident" class="form-label">Befizető:</label>
+      <select id="resident" formControlName="resident" class="form-select">
+        <option *ngFor="let resident of residents" [value]="resident.id">
+          {{ resident.name }} (id: {{ resident.id }})</option>
+      </select>
+      <div *ngIf="creationForm.get('resident')?.invalid && creationForm.get('resident')?.touched" class="text-danger">
+        A mező nincs megfelelően kitöltve!
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="amount" class="form-label">Összeg (HUF):</label>
+      <input type="number" id="amount" formControlName="amount" class="form-control">
+      <div *ngIf="creationForm.get('amount')?.invalid && creationForm.get('amount')?.touched" class="text-danger">
+        A mező nincs megfelelően kitöltve!
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Megjegyzés:</label>
+      <input type="text" id="description" formControlName="description" class="form-control">
+      <div *ngIf="creationForm.get('description')?.invalid && creationForm.get('description')?.touched" class="text-danger">
+        A mező nincs megfelelően kitöltve!
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="creationForm.invalid">Költség létrehozása</button>
+  </form>
+  <div *ngIf="createdTransaction">
+    <h2 class="mt-4">Létrehozott befizetés</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Befizető</th>
+          <th>Összeg (HUF)</th>
+          <th>Megjegyzés</th>
+          <th>Dátum</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ createdTransaction.id }}</td>
+          <td>{{ createdTransaction.resident.name }} (id: {{ createdTransaction.resident.id }})</td>
+          <td>{{ createdTransaction.amount }}</td>
+          <td>{{ createdTransaction.description }}</td>
+          <td>{{ createdTransaction.date }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

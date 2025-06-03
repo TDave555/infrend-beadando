@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment.development';
 @Injectable({
   providedIn: 'root'
 })
-export class ApartmentServiceService {
+export class ApartmentService {
 
   private apiUrl = `${environment.apiUrl}/apartments`;
 
@@ -35,6 +35,10 @@ export class ApartmentServiceService {
       withCost: withCost
     }
     return this.http.put<ApartmentDto>(`${this.apiUrl}/move`, reqBody);
+  }
+
+  update(apartmentDto: ApartmentDto) {
+    return this.http.put<ApartmentDto>(`${this.apiUrl}`, apartmentDto);
   }
 
   delete(id: number) {

@@ -1,0 +1,42 @@
+<div class="container mt-4">
+
+  <div *ngIf="message" class="fixed-bottom alert mb-3"
+  [ngClass]="{'alert-success': !isError, 'alert-danger': isError}"
+  role="alert">
+    {{ message }}
+  </div>
+
+  <h2 class="mb-4">Új lakó beköltözése</h2>
+
+  <form [formGroup]="moveForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="apartmentId" class="form-label">Lakás</label>
+      <select id="apartmentId" formControlName="apartmentId"
+      class="form-select">
+        <option *ngFor="let apartment of apartments" [value]="apartment.id">
+          {{ apartment.apartmentNumber }}
+        </option>
+      </select>
+      <div *ngIf="moveForm.get('apartmentId')?.invalid
+      && moveForm.get('apartmentId')?.touched" class="text-danger">
+        A mező nincs megfelelően kitöltve!
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="newResidentName" class="form-label">Új lakó neve:</label>
+      <input type="text" id="newResidentName" formControlName="newResidentName"
+      class="form-control">
+      <div *ngIf="moveForm.get('newResidentName')?.invalid
+      && moveForm.get('newResidentName')?.touched" class="text-danger">
+        A mező nincs megfelelően kitöltve!
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="withCost" class="form-label">Költségek átválallása</label>
+      <input type="checkbox" id="withCost" formControlName="withCost"
+      class="form-check-input">
+    </div>
+    <button type="submit" class="btn btn-success" [disabled]="moveForm.invalid">Lakó beköltöztetése</button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="onCancel()">Mégse</button>
+  </form>
+</div>

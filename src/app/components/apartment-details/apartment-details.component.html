@@ -1,1 +1,56 @@
-<p>apartment-details works!</p>
+<div class="container mt-4">
+
+  <div *ngIf="message" class="fixed-bottom alert mb-3"
+  [ngClass]="{'alert-success': !isError, 'alert-danger': isError}"
+  role="alert">
+    {{ message }}
+  </div>
+
+  <h2 class="mb-4">Lakás adatai</h2>
+  <h4 class="mb-4 text-muted">(A *-gal jelölt adatok módosíthatók)</h4>
+
+   <form [formGroup]="detailsForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="id" class="form-label">Azonosító:</label>
+      <input type="number" id="id" formControlName="id"
+      class="form-control" [readonly]="true">
+    </div>
+    <div class="mb-3">
+      <label for="apartmentNumber" class="form-label">* Lakás emelet, ajtó:</label>
+      <select id="apartmentNumber" formControlName="apartmentNumber"
+      class="form-select">
+        <option *ngFor="let apartmentNumber of freeApartmentNumbers"
+        [value]="apartmentNumber">{{ apartmentNumber }}</option>
+      </select>
+       <div *ngIf="detailsForm.get('apartmentNumber')?.invalid &&
+       detailsForm.get('apartmentNumber')?.touched" class="text-danger">
+            A mező nincs megfelelően kitöltve!
+       </div>
+    </div>
+    <div class="mb-3">
+      <label for="area" class="form-label">* Lakás alapterülete (m²):</label>
+      <input type="number" id="area" formControlName="area" class="form-control">
+      <div *ngIf="detailsForm.get('area')?.invalid &&
+      detailsForm.get('area')?.touched" class="text-danger">
+        A mező nincs megfelelően kitöltve! (minimum 20, maximum 50)
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="airVolume" class="form-label">* Lakás légtere (m³):</label>
+      <input type="number" id="airVolume" formControlName="airVolume"
+      class="form-control">
+      <div *ngIf="detailsForm.get('area')?.invalid &&
+      detailsForm.get('area')?.touched" class="text-danger">
+        A mező nincs megfelelően kitöltve! (minimum 50, maximum 150)
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="resident" class="form-label">Lakó:</label>
+      <input type="text" id="resident" formControlName="resident"
+      class="form-control" [readonly]="true">
+    </div>
+
+    <button type="submit" class="btn btn-warning" [disabled]="detailsForm.invalid">Lakás módosítása</button>
+    <button type="button" class="btn btn-secondary ms-2" (click)="goBackToList()">Listához</button>
+  </form>
+</div>
